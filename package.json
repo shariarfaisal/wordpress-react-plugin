@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tailwindbuild": "tailwindcss -i ./src/style.css -o ./build/style.css --postcss --minify",
-    "tailwindwatch": "tailwindcss -i ./src/style.css -o ./build/style.css --watch --postcss --minify",
+    "tailwindbuild": "tailwindcss -i ./src/frontend.scss -o ./build/frontend.css --postcss --minify",
+    "tailwindwatch": "tailwindcss -i ./src/frontend.scss -o ./build/frontend.css --watch --postcss --minify",
     "preview": "npm-run-all --parallel sync start",
     "sync": "browser-sync start -p 'boilerplate-2024.local' --files '**/*.php' 'build/*.js' 'build/*.css'",
     "wpbuild": "wp-scripts build src/index.js src/frontend.js",
@@ -23,12 +23,18 @@
     "npm-run-all": "^4.1.5"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.9",
+    "marked": "^15.0.6",
     "postcss": "^8.4.38",
     "postcss-nested": "^6.0.1",
     "react": "18.0.0",
     "react-dom": "18.0.0",
-    "tailwindcss": "^3.4.3"
+    "react-icons": "^5.4.0",
+    "react-modal": "^3.16.3",
+    "react-toastify": "^11.0.2",
+    "tailwindcss": "^3.4.3",
+    "zustand": "^5.0.3"
   }
 }

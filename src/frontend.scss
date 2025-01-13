@@ -1,15 +1,15 @@
-.summarizer {
+.summarizer,
+.limit-modal {
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
 }
 
-// add the code bellow
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
+
   .no-scrollbar {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */

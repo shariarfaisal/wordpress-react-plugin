@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useCallback, useMemo, useState } from "react";
+import { useSummarizer } from "./useSummarizer";
 
 export const UrlSummarizer = () => {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { setSummary } = useSummarizer();
 
   const summarize = useCallback(
     async ({ link, email, prompt_type, source }) => {
@@ -27,6 +28,7 @@ export const UrlSummarizer = () => {
         } else {
           setErrMsg("");
           setSummary(data.video);
+          console.log(data.video);
         }
       } catch (err) {
         const msg = err?.response?.data?.message || err.message;
@@ -51,14 +53,14 @@ export const UrlSummarizer = () => {
     summarize({
       link: url,
       email,
-      prompt_type: "blog-post-generator",
+      // prompt_type: "blog-post-generator",
       source: "url",
     });
   };
 
   return (
-    <div className={`summarizer `}>
-      <div className="summarizer-url border rounded-lg p-4 space-y-3">
+    <>
+      <div className="summarizer-url space-y-3">
         {errMsg && (
           <p className="text-lg bg-red-200 text-red-600 p-3 rounded-lg font-normal">
             {errMsg}
@@ -107,6 +109,6 @@ export const UrlSummarizer = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
