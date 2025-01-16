@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSummarizer } from "./useSummarizer";
-import { FaArrowUp } from "react-icons/fa";
 import { IoArrowUp } from "react-icons/io5";
+import { SignInContent } from "./limit-modal";
 
 export default function Chat({ show }) {
   const { setLimitOpen, summary } = useSummarizer();
@@ -37,28 +37,9 @@ export default function Chat({ show }) {
   }
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h2 className="text-xl lg:text-2xl font-semibold">
-          Ask Follow Up Question
-        </h2>
-        <p className="text-sm lg:text-base font-normal">
-          Ask any questions to dig deep on any topic from the source content.
-        </p>
-      </div>
+      <SignInContent />
       <div className="">
-        <div className="flex flex-col items-center gap-3 px-5 py-10 min-h-[400px]">
-          <div className="w-full">
-            <div className="flex justify-end">
-              <p className="bg-brand-primary px-5 py-1.5 rounded-xl bg-black/80 text-white">
-                Hi
-              </p>
-            </div>
-            <div className="flex">
-              <p className="bg-slate-200 dark:bg-slate-800 px-5 py-1.5 rounded-xl">
-                How can I help you?
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col items-center gap-3 px-5 py-10 min-h-[200px]">
           <div className="w-full grid grid-cols-2 gap-3 mt-auto">
             {questions.map((q, i) => {
               return (
@@ -80,7 +61,7 @@ export default function Chat({ show }) {
             e.preventDefault();
             setLimitOpen(true);
           }}
-          className="flex items-center gap-3 h-12 px-3 pr-5 bg-slate-100 border border-slate-200 rounded-full"
+          className="flex items-center gap-3 h-16 px-3 pr-5 bg-slate-100 border border-slate-200 rounded-full"
         >
           <input
             placeholder={placeholder}

@@ -5,6 +5,33 @@ import { IoMdClose } from "react-icons/io";
 
 Modal.setAppElement("body");
 
+export const SignInContent = () => {
+  return (
+    <div className="space-y-3 text-center px-5 py-10">
+      <h2 className="text-3xl font-bold">Enjoy Free Trial!🚀</h2>
+      <p className="text-lg font-light">
+        To access all premium features, please log in or create a free account
+        and enjoy a free trial!
+      </p>
+      <div className="flex items-center justify-center gap-3 h-[100px]">
+        <a href="https://web.tubeonai.com/login" target="_blank">
+          <button className="h-10 w-[150px] px-5 rounded-lg text-base flex items-center justify-center font-normal border border-gray-200 hover:bg-slate-200 transition-colors duration-150">
+            Log In
+          </button>
+        </a>
+        <a href="https://web.tubeonai.com/register" target="_blank">
+          <button className="h-10 w-[150px] px-3 rounded-lg text-base flex items-center justify-center font-normal bg-sky-500 hover:bg-sky-600 transition-colors duration-150 text-white">
+            Sign Up
+          </button>
+        </a>
+      </div>
+      <p className="text-sm font-normal text-gray-600">
+        No credit card required
+      </p>
+    </div>
+  );
+};
+
 export default function LimitModal() {
   const { limitOpen, setLimitOpen, errMsg } = useSummarizer();
 
@@ -56,25 +83,7 @@ export default function LimitModal() {
               style={{ borderRadius: "0" }}
             />
           )}
-          <h1 className="text-2xl md:text-3xl font-lora font-semibold">
-            Enjoy Free Trial! 🚀
-          </h1>
-          <p className="text-sm text-slate-600 dark:text-gray-400">
-            To access all premium features, please log in or create a free
-            account and enjoy a free trial!
-          </p>
-          <div className="w-full flex justify-center">
-            <a href="https://web.tubeonai.com/login" target="_blank">
-              <button
-                onClick={() => {
-                  setLimitOpen(false);
-                }}
-                className="bg-sky-500 h-8 text-base hover:bg-sky-600 text-white px-4 flex items-center justify-center rounded-full font-semibold"
-              >
-                Login
-              </button>
-            </a>
-          </div>
+          <SignInContent />
         </div>
       </div>
     </Modal>

@@ -3,7 +3,7 @@ import "./index.scss";
 import { useBlockProps } from "@wordpress/block-editor";
 import { registerBlockType } from "@wordpress/blocks";
 import metadata from "./block.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 registerBlockType(metadata.name, { edit: EditComponent });
 
@@ -14,6 +14,10 @@ function EditComponent(props) {
     setSummarizerType(e.target.value);
     props.setAttributes({ summarizerType: e.target.value });
   }
+
+  useEffect(() => {
+    setSummarizerType(props.attributes.summarizerType || "url");
+  }, []);
 
   return (
     <div {...useBlockProps()}>

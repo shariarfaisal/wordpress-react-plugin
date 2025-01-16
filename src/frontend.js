@@ -17,7 +17,13 @@ divsToUpdate.forEach((div) => {
 });
 
 function OurComponent({ summarizerType }) {
-  const { summary, setType, limitOpen } = useSummarizer();
+  const { summary, setType, limitOpen, setPromptType } = useSummarizer();
+  const url = new URL(window.location.href);
+
+  useEffect(() => {
+    const pathname = url.pathname.replaceAll("/", "");
+    setPromptType(pathname);
+  }, []);
 
   useEffect(() => {
     setType(summarizerType);
