@@ -8,7 +8,7 @@ export default function Transcript() {
   const { summary } = useSummarizer();
 
   const copyHandler = useCallback(() => {
-    copyTextToClipboard(summary.transcript, () => {
+    copyTextToClipboard(summary.captions, () => {
       toast("Copied", {
         position: "bottom-right",
         autoClose: 2000,
@@ -23,7 +23,7 @@ export default function Transcript() {
         },
       });
     });
-  }, [summary.transcript]);
+  }, [summary.captions]);
 
   if (!summary) {
     return null;
@@ -40,7 +40,7 @@ export default function Transcript() {
       <div
         className="h-full scroll-y"
         dangerouslySetInnerHTML={{
-          __html: `<pre class="whitespace-pre-wrap">${summary.transcript}</pre>`,
+          __html: `<pre class="whitespace-pre-wrap">${summary.captions}</pre>`,
         }}
       ></div>
     </div>

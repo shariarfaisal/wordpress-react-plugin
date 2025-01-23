@@ -16,12 +16,20 @@ import Transcript from "./transcript";
 import Languages from "./languages";
 
 const Output = () => {
-  const { summary, activeTab, setActiveTab, setSummary, title, promptType } =
-    useSummarizer();
+  const {
+    webAppBaseUrl,
+    summary,
+    activeTab,
+    setActiveTab,
+    setSummary,
+    title,
+    promptType,
+  } = useSummarizer();
+  console.log(promptType);
   const [errMsg, setErrMsg] = useState("");
   const [parsedContent, setParsedContent] = useState("");
-  const { completion, setCompletion, isLoading, complete } = useCompletion({
-    api: "http://localhost:3000/api/summarize",
+  const { completion, isLoading, setCompletion, complete } = useCompletion({
+    api: `${webAppBaseUrl}/api/summarize`,
     body: {
       id: summary.id,
       source: summary.source,
@@ -73,35 +81,12 @@ const Output = () => {
   ];
 
   useEffect(() => {
-    if (summary.custom_prompt_details) {
-      if (summary.custom_prompt_details.summary_translated?.summary_as_md) {
-        setCompletion(
-          summary.custom_prompt_details.summary_translated.summary_as_md
-        );
-      } else {
-        setCompletion(summary.custom_prompt_details.summary_as_md);
-      }
-    } else if (
-      summary.summary_translations &&
-      summary.summary_translations.length > 0
-    ) {
-      setCompletion(summary.summary_translations[0].summary_as_md);
-    } else if (!summary.summary && summary.transcript) {
-      complete(summary.transcript);
-    } else if (
-      summary.transcript &&
-      promptType &&
-      !summary.custom_prompt_response
-    ) {
-      complete(summary.transcript);
-    } else if (!summary.custom_prompt_response_as_html) {
-      setCompletion(
-        summary.summary_as_md || summary.summary_html || summary.summary
-      );
-    } else if (summary.custom_prompt_response_as_html) {
-      setCompletion(summary.custom_prompt_response_as_html);
-    } else if (!summary.transcript) {
-      setErrMsg("Transcript not found");
+    if (summary.summary) {
+      setCompletion(summary.summary);
+    } else if (summary.captions) {
+      complete(summary.captions, {
+        promptType,
+      });
     }
   }, []);
 
@@ -234,11 +219,11 @@ const Output = () => {
       )}
 
       {/* content loading */}
-      {isLoading && !completion && (
+      {!completion && !errMsg && (
         <div>
           <div className="flex items-center gap-2">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
-            <span>Generating summary...</span>
+            <span>Generating...</span>
           </div>
         </div>
       )}
@@ -251,7 +236,9 @@ const Output = () => {
             <div className={`md:pr-3 prose dark:prose-invert !text-lg pb-10`}>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: parsedContent,
+                  __html:
+                    parsedContent +
+                    `${isLoading ? `<span class="typewriter"></span>` : ""}`,
                 }}
               ></div>
             </div>

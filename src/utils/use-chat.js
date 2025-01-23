@@ -13,10 +13,54 @@ const textStreamPart = {
   },
 };
 
-const streamParts = [textStreamPart];
+const jsonStreamPart = {
+  code: "1",
+  name: "json",
+  parse: (value) => {
+    if (typeof value !== "string") {
+      throw new Error('"json" parts expect a string value.');
+    }
+    return { type: "json", value };
+  },
+};
+
+const codeStreamPart = {
+  code: "2",
+  name: "code",
+  parse: (value) => {
+    if (typeof value !== "string") {
+      throw new Error('"code" parts expect a string value.');
+    }
+    return { type: "code", value };
+  },
+};
+
+const endStreamPart = {
+  code: "e",
+  name: "text",
+  parse: () => ({ type: "text", value: "" }),
+};
+
+const stopStreamPart = {
+  code: "d",
+  name: "text",
+  parse: () => ({ type: "text", value: "" }),
+};
+
+const streamParts = [
+  textStreamPart,
+  jsonStreamPart,
+  codeStreamPart,
+  endStreamPart,
+  stopStreamPart,
+];
 
 export const streamPartsByCode = {
   [textStreamPart.code]: textStreamPart,
+  [jsonStreamPart.code]: jsonStreamPart,
+  [codeStreamPart.code]: codeStreamPart,
+  [endStreamPart.code]: endStreamPart,
+  [stopStreamPart.code]: stopStreamPart,
 };
 
 export const validCodes = streamParts.map((part) => part.code);

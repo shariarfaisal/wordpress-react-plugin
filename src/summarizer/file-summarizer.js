@@ -13,6 +13,7 @@ import { IoMdClose } from "react-icons/io";
 import { useMutation } from "../utils";
 import { useDropzone } from "react-dropzone";
 import { CiWarning } from "react-icons/ci";
+import { VscLoading } from "react-icons/vsc";
 
 const types = {
   "application/pdf": <FaFilePdf />,
@@ -73,12 +74,13 @@ function Progress({ progress = 0, className }) {
 export const FileSummarizer = () => {
   const { prompt_type } = useSummarizer();
   const [file, setFile] = useState();
+  const [title, setTitle] = useState("");
   const [email, setEmail] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedUrl, setUploadedUrl] = useState("");
-  const { setSummary } = useSummarizer();
+  const { setSummary, backendBaseUrl } = useSummarizer();
 
   const uploadToS3 = useMutation({
     mutationFn: async (file) => {
@@ -86,7 +88,7 @@ export const FileSummarizer = () => {
       formData.append("file", file);
 
       const { data } = await axios.post(
-        "https://web.tubeonai.com/api/v2/user/get-presigned-url",
+        `${backendBaseUrl}/api/get-presigned-url-for-free-users`,
         {
           file_name: file.name,
           file_type: file.type,
@@ -161,12 +163,13 @@ export const FileSummarizer = () => {
       if (!limitError) {
         setFile(file);
         uploadToS3.mutate(file);
+        setTitle(file.name);
       }
     }
   };
 
   const summarize = useCallback(
-    async ({ email, prompt_type }) => {
+    async ({ email, prompt_type, title }) => {
       try {
         if (!uploadedUrl || !file) {
           return;
@@ -188,9 +191,10 @@ export const FileSummarizer = () => {
 
         setLoading(true);
         const { data } = await axios.post(
-          "https://api.tubeonai.com/api/summarize",
+          "https://dev-api.tubeonai.com/api/summarize",
           {
-            link_or_id: link,
+            link_or_id: uploadedUrl,
+            title,
             email,
             prompt_type,
             source,
@@ -215,12 +219,17 @@ export const FileSummarizer = () => {
     [uploadedUrl, file]
   );
 
-  const submitHandler = () => {
+  const submitHandler = useCallback(() => {
+    if (!email) {
+      setErrMsg("Please enter your email");
+      return;
+    }
     summarize({
       email,
       prompt_type,
+      title,
     });
-  };
+  }, [email, prompt_type, title]);
 
   const closeFile = () => {
     setFile(null);
@@ -236,6 +245,7 @@ export const FileSummarizer = () => {
           {errMsg}
         </p>
       )}
+
       {
         <div
           {...getRootProps()}
@@ -258,6 +268,7 @@ export const FileSummarizer = () => {
           </div>
         </div>
       }
+
       {file && (
         <div className="flex items-center  mb-2">
           <div className="w-full relative flex items-center gap-2 p-2 pr-4 rounded-lg border bg-slate-50">
@@ -280,7 +291,9 @@ export const FileSummarizer = () => {
               <p className="text-sm font-medium truncate w-full">{file.name}</p>
               <p className="text-xs font-medium text-slate-400">
                 {FileType({ type: file.type })}{" "}
-                {<span className="ml-1">Uploading...</span>}
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                  <span className="ml-1">Uploading...</span>
+                )}
               </p>
             </div>
             <button
@@ -291,6 +304,14 @@ export const FileSummarizer = () => {
             </button>
           </div>
         </div>
+      )}
+      {file && (
+        <input
+          className="w-full px-3 py-2 focus:outline-none rounded-lg bg-slate-100 border"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       )}
       <div className="flex flex-row justify-between items-center">
         <div className="flex items-start gap-2">
@@ -318,9 +339,16 @@ export const FileSummarizer = () => {
           <button
             onClick={submitHandler}
             disabled={!uploadedUrl}
-            className="px-4 py-2 h-10 rounded-xl disabled:cursor-not-allowed disabled:bg-slate-500 disabled:text-white bg-sky-600 hover:bg-sky-500 text-white transition-colors duration-200"
+            className="px-4 py-2 h-10 flex items-center gap-2 rounded-xl disabled:cursor-not-allowed disabled:bg-slate-500 disabled:text-white bg-sky-600 hover:bg-sky-500 text-white transition-colors duration-200 text-sm font-medium"
           >
-            {loading ? "Loading..." : "Generate"}
+            {loading ? (
+              <>
+                <VscLoading className="animate-spin" />
+                <span className="ml-2">Processing</span>
+              </>
+            ) : (
+              "Generate"
+            )}
           </button>
         </div>
       </div>

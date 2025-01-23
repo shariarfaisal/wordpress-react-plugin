@@ -7,21 +7,18 @@ export const UrlSummarizer = () => {
   const [email, setEmail] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setSummary } = useSummarizer();
+  const { setSummary, backendBaseUrl } = useSummarizer();
 
   const summarize = useCallback(
     async ({ link, email, prompt_type, source }) => {
       try {
         setLoading(true);
-        const { data } = await axios.post(
-          "https://api.tubeonai.com/api/summarize",
-          {
-            link_or_id: link,
-            email,
-            prompt_type,
-            source,
-          }
-        );
+        const { data } = await axios.post(`${backendBaseUrl}/api/summarize`, {
+          link_or_id: link,
+          email,
+          prompt_type,
+          source,
+        });
 
         if (!data.success) {
           setErrMsg(data.message);

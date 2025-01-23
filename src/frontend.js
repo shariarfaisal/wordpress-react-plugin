@@ -17,12 +17,14 @@ divsToUpdate.forEach((div) => {
 });
 
 function OurComponent({ summarizerType }) {
-  const { summary, setType, limitOpen, setPromptType } = useSummarizer();
+  const { summary, setType, setPromptType } = useSummarizer();
   const url = new URL(window.location.href);
 
   useEffect(() => {
     const pathname = url.pathname.replaceAll("/", "");
-    setPromptType(pathname);
+    if (pathname) {
+      setPromptType(pathname);
+    }
   }, []);
 
   useEffect(() => {
@@ -34,7 +36,8 @@ function OurComponent({ summarizerType }) {
       <ToastContainer />
       <div className="border rounded-lg p-4 space-y-3">
         {!summary && <Summarizer type={summarizerType} />}
-        {summary && <Output />}
+        {summary && summary.captions && <Output />}
+
         <LimitModal />
       </div>
     </div>
