@@ -10,7 +10,7 @@ export const TextSummarizer = () => {
   const [errMsg, setErrMsg] = useState("");
   const [emailErr, setEmailErr] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setSummary } = useSummarizer();
+  const { setSummary, webAppBaseUrl } = useSummarizer();
 
   const summarize = useCallback(async ({ title, text, email, source }) => {
     try {
@@ -76,16 +76,16 @@ export const TextSummarizer = () => {
           className="w-full text-base font-medium min-h-16 focus:outline-none rounded-xl border-none bg-slate-100 p-3 no-scrollbar"
         ></textarea>
       </div>
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex items-start gap-2">
+      <div className="flex flex-col gap-2 sm:!flex-row justify-between">
+        <div className="flex items-start gap-2 w-full">
           <a
             className="flex flex-row gap-1.5 bg-sky-200 p-2 rounded-lg text-sm"
-            href=""
+            href={`${webAppBaseUrl}/login`}
           >
             <span className="font-medium">Free</span>
             <span className="font-semibold text-sky-600 uppercase">Trial</span>
           </a>
-          <div className="space-y-2">
+          <div className="space-y-2 w-full md:max-w-[250px]">
             <input
               className="w-full h-10 focus:outline-none rounded-lg text-base border  p-3"
               type="email"
@@ -99,11 +99,11 @@ export const TextSummarizer = () => {
             </p>
           </div>
         </div>
-        <div>
+        <div className="w-full sm:!w-[140px]">
           <button
             onClick={submitHandler}
             disabled={!text}
-            className="px-4 py-2 h-10 flex items-center gap-2 rounded-xl disabled:cursor-not-allowed disabled:bg-slate-500 disabled:text-white bg-sky-600 hover:bg-sky-500 text-white transition-colors duration-200 text-sm font-medium"
+            className="w-full px-4 py-2 h-10 flex items-center justify-center gap-2 rounded-xl disabled:cursor-not-allowed disabled:bg-slate-500 disabled:text-white bg-sky-600 hover:bg-sky-500 text-white transition-colors duration-200 text-sm font-medium"
           >
             {loading ? (
               <>

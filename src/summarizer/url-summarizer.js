@@ -1,8 +1,6 @@
 import axios from "axios";
 import { useCallback, useMemo, useState } from "react";
 import { useSummarizer } from "./useSummarizer";
-import { useQuery } from "../utils";
-import { useSummaryDetails } from "../utils/use-summary-details";
 import { VscLoading } from "react-icons/vsc";
 
 export const UrlSummarizer = () => {
@@ -11,14 +9,6 @@ export const UrlSummarizer = () => {
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const { setSummary, backendBaseUrl } = useSummarizer();
-  const { mutate: fetchSummary } = useSummaryDetails({
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
 
   const summarize = useCallback(
     async ({ link, email, prompt_type, source }) => {
@@ -84,18 +74,18 @@ export const UrlSummarizer = () => {
             className="w-full min-h-16 focus:outline-none rounded-xl border-none bg-slate-100 p-3 no-scrollbar"
           ></textarea>
         </div>
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex items-start gap-2">
+        <div className="flex flex-col gap-2 sm:!flex-row justify-between">
+          <div className="flex items-start gap-2 w-full">
             <a
               className="flex flex-row gap-1.5 bg-sky-200 p-2 rounded-lg text-sm"
-              href=""
+              href={`${webAppBaseUrl}/login`}
             >
               <span className="font-medium">Free</span>
               <span className="font-semibold text-sky-600 uppercase">
                 Trial
               </span>
             </a>
-            <div className="space-y-2">
+            <div className="space-y-2 w-full md:max-w-[250px]">
               <input
                 className="w-full h-10 focus:outline-none rounded-lg text-base border  p-3"
                 type="email"
@@ -103,16 +93,17 @@ export const UrlSummarizer = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@email.com"
               />
+              {emailErr && <p className="text-red-500 text-sm">*{emailErr}</p>}
               <p className="text-sm text-yellow-600">
                 Share email to get summary in your inbox
               </p>
             </div>
           </div>
-          <div>
+          <div className="w-full sm:!w-[140px]">
             <button
               onClick={submitHandler}
               disabled={!isValidUrl}
-              className="px-4 py-2 h-10 flex items-center gap-2 rounded-xl disabled:cursor-not-allowed disabled:bg-slate-500 disabled:text-white bg-sky-600 hover:bg-sky-500 text-white transition-colors duration-200 text-sm font-medium"
+              className="w-full px-4 py-2 h-10 flex items-center justify-center gap-2 rounded-xl disabled:cursor-not-allowed disabled:bg-slate-500 disabled:text-white bg-sky-600 hover:bg-sky-500 text-white transition-colors duration-200 text-sm font-medium"
             >
               {loading ? (
                 <>
