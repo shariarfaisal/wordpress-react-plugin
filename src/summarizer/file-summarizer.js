@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSummarizer } from "./useSummarizer";
 import {
   FaFileAlt,
@@ -190,17 +190,14 @@ export const FileSummarizer = () => {
         }
 
         setLoading(true);
-        const { data } = await axios.post(
-          "https://dev-api.tubeonai.com/api/summarize",
-          {
-            link_or_id: uploadedUrl,
-            title,
-            email,
-            prompt_type,
-            source,
-            extension,
-          }
-        );
+        const { data } = await axios.post(`${webAppBaseUrl}/api/summarize`, {
+          link_or_id: uploadedUrl,
+          title,
+          email,
+          prompt_type,
+          source,
+          extension,
+        });
 
         if (!data.success) {
           setErrMsg(data.message);
@@ -246,7 +243,7 @@ export const FileSummarizer = () => {
         </p>
       )}
 
-      {
+      {!file && (
         <div
           {...getRootProps()}
           className="border-dashed rounded-lg min-h-[200px] flex flex-col items-center justify-center border-2 p-4 cursor-pointer focus:outline-none outline-none"
@@ -261,16 +258,16 @@ export const FileSummarizer = () => {
               PDF, Doc, Docx, Txt, Pptx, Mp3, Mp4
             </p>
             <div className="text-center mt-3">
-              <button className="h-8 px-4 bg-sky-500 text-white rounded-lg">
+              <button className="h-8 px-4 bg-sky-500 text-white rounded-lg text-sm">
                 Add a file
               </button>
             </div>
           </div>
         </div>
-      }
+      )}
 
       {file && (
-        <div className="flex items-center  mb-2">
+        <div className="flex items-center">
           <div className="w-full relative flex items-center gap-2 p-2 pr-4 rounded-lg border bg-slate-50">
             <div
               className={`w-10 h-10 flex items-center justify-center rounded-lg border text-xl ${
@@ -307,7 +304,7 @@ export const FileSummarizer = () => {
       )}
       {file && (
         <input
-          className="w-full px-3 py-2 focus:outline-none rounded-lg bg-slate-100 border"
+          className="w-full px-3 py-2 focus:outline-none rounded-lg bg-slate-100 border text-sm"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}

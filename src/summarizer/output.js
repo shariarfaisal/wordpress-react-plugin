@@ -24,6 +24,7 @@ const Output = () => {
     setSummary,
     title,
     promptType,
+    textToPdf,
   } = useSummarizer();
   console.log(promptType);
   const [errMsg, setErrMsg] = useState("");
@@ -113,6 +114,17 @@ const Output = () => {
         progress: undefined,
         theme: "light",
       });
+    });
+  }, [completion]);
+
+  const downloadHandler = useCallback(() => {
+    textToPdf(completion, (err) => {
+      if (err) {
+        console.log(err);
+        toast("Failed to export pdf!", {
+          position: "bottom-right",
+        });
+      }
     });
   }, [completion]);
 
@@ -211,7 +223,10 @@ const Output = () => {
             <span className="text-xs">Copy</span>
           </button>
           <Languages />
-          <button className="ml-auto bg-black text-white flex items-center gap-2 text-sm font-medium border px-4 h-8 rounded hover:bg-black/80 transitions-colors">
+          <button
+            onClick={downloadHandler}
+            className="ml-auto bg-black text-white flex items-center gap-2 text-sm font-medium border px-4 h-8 rounded hover:bg-black/80 transitions-colors"
+          >
             <MdOutlineFileDownload />
             <span>Export PDF</span>
           </button>
