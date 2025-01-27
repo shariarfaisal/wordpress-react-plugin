@@ -6,14 +6,15 @@ import { VscLoading } from "react-icons/vsc";
 export const UrlSummarizer = () => {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
+  const [emailErr, setEmailErr] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setSummary, backendBaseUrl } = useSummarizer();
+  const { setSummary, backendBaseUrl, webAppBaseUrl } = useSummarizer();
 
   const summarize = useCallback(
     async ({ link, email, prompt_type, source }) => {
       if (!email) {
-        setErrMsg("Please enter your email");
+        setEmailErr("Please enter your email");
         return;
       }
       try {
