@@ -4,6 +4,10 @@
   border-radius: 5px;
   padding: 20px;
   box-sizing: border-box;
+
+  > div:not(:first-child) {
+    margin-top: 20px;
+  }
 }
 
 .title {
@@ -13,11 +17,133 @@
 }
 
 .select-summarizer {
-  width: 100%;
-  max-width: 200px;
+  width: 200px;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #94a9e2;
   box-sizing: border-box;
-  margin-top: 10px;
+}
+
+.controls-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}
+
+.button-name-control {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .button-name-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #94a9e2;
+    box-sizing: border-box;
+  }
+}
+
+.youtube-urls-section {
+  h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+  }
+}
+
+.url-input-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.youtube-url-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-url-button {
+  padding: 8px 16px;
+  background-color: #007cba;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #006ba1;
+  }
+}
+
+.youtube-urls-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.url-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
+
+  .remove-url-button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #c82333;
+    }
+  }
+}
+
+.tool-title-control,
+.placeholder-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #94a9e2;
+    box-sizing: border-box;
+  }
 }

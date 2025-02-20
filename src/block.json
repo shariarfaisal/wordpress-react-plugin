@@ -8,7 +8,24 @@
   "icon": "welcome-learn-more",
   "attributes": {
     "summarizerType": {
-      "type": "string"
+      "type": "string",
+      "default": "url"
+    },
+    "youtubeUrls": {
+      "type": "array",
+      "default": []
+    },
+    "buttonName": {
+      "type": "string",
+      "default": "Summarize"
+    },
+    "toolTitle": {
+      "type": "string",
+      "default": "YouTube Video Summarizer"
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Paste YouTube URL here"
     }
   },
   "editorScript": "file:./index.js",

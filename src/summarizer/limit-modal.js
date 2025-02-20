@@ -7,7 +7,7 @@ Modal.setAppElement("body");
 
 export const SignInContent = () => {
   return (
-    <div className="space-y-3 text-center px-5 py-10">
+    <div className="space-y-3 text-center px-5 py-8">
       <h2 className="text-3xl font-bold">Enjoy Free Trial!🚀</h2>
       <p className="text-lg font-light">
         To access all premium features, please log in or create a free account

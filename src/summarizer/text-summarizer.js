@@ -1,121 +1,125 @@
 import axios from "axios";
-import { useCallback, useMemo, useState } from "react";
+import {
+  useCallback,
+  useMemo,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+} from "react";
 import { useSummarizer } from "./useSummarizer";
 import { VscLoading } from "react-icons/vsc";
+import { BsStars } from "react-icons/bs";
 
-export const TextSummarizer = () => {
-  const [text, setText] = useState("");
-  const [title, setTitle] = useState("");
-  const [email, setEmail] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const [emailErr, setEmailErr] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { setSummary, webAppBaseUrl } = useSummarizer();
+export const TextSummarizer = forwardRef(
+  (
+    { buttonName = "Generate", placeholder = "Enter text to summarize" },
+    ref
+  ) => {
+    const [text, setText] = useState("");
+    const [errMsg, setErrMsg] = useState("");
+    const [loading, setLoading] = useState(false);
+    const { setSummary, backendBaseUrl, webAppBaseUrl, setLimitOpen, setErrMsg: setGlobalErrMsg } = useSummarizer();
 
-  const summarize = useCallback(async ({ title, text, email, source }) => {
-    try {
-      if (!email) {
-        setEmailErr("Email is required");
-        return;
-      }
 
-      setLoading(true);
-      const { data } = await axios.post(
-        "https://dev-api.tubeonai.com/api/summarize",
-        {
-          title,
-          text,
-          email,
-          source,
+    const summarize = useCallback(
+      async ({ text, prompt_type, source }) => {
+        try {
+          setLoading(true);
+          const { data } = await axios.post(`${backendBaseUrl}/api/summarize`, {
+            text,
+            prompt_type,
+            source,
+          });
+
+          if (!data.success) {
+            setErrMsg(data.message);
+          } else {
+            setErrMsg("");
+            setSummary(data.video);
+          }
+        } catch (err) {
+          const msg =
+            err?.response?.data?.message || err?.response?.data || err.message;
+          setErrMsg(msg);
+          setLimitOpen(true);
+          setGlobalErrMsg(msg);
+        } finally {
+          setLoading(false);
         }
-      );
+      },
+      []
+    );
 
-      if (!data.success) {
-        setErrMsg(data.message);
-      } else {
-        setErrMsg("");
-        setSummary(data.video);
-        console.log(data.video);
-      }
-    } catch (err) {
-      const msg = err?.response?.data?.message || err.message;
-      setErrMsg(msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    useImperativeHandle(ref, () => ({
+      summarizeText: (textContent) => {
+        setText(textContent);
+        summarize({
+          text: textContent,
+          source: "text",
+        });
+      },
+    }));
 
-  const submitHandler = () => {
-    summarize({
-      link: "",
-      text: text,
-      title,
-      email,
-      source: "url",
-    });
-  };
+    const isValidText = useMemo(() => {
+      return text.trim().length > 0;
+    }, [text]);
 
-  return (
-    <div className="summarizer-text space-y-3">
-      {errMsg && (
-        <p className="text-lg bg-red-200 text-red-600 p-3 rounded-lg font-normal">
-          {errMsg}
-        </p>
-      )}
-      <div className="space-y-2">
-        <input
-          className="w-full text-sm font-medium px-3 py-2 focus:outline-none rounded-lg bg-slate-100"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Paste Text here"
-          className="w-full text-base font-medium min-h-16 focus:outline-none rounded-xl border-none bg-slate-100 p-3 no-scrollbar"
-        ></textarea>
-      </div>
-      <div className="flex flex-col gap-2 sm:!flex-row justify-between">
-        <div className="flex items-start gap-2 w-full">
-          <a
-            className="flex flex-row gap-1.5 bg-sky-200 p-2 rounded-lg text-sm"
-            href={`${webAppBaseUrl}/login`}
-          >
-            <span className="font-medium">Free</span>
-            <span className="font-semibold text-sky-600 uppercase">Trial</span>
-          </a>
-          <div className="space-y-2 w-full md:max-w-[250px]">
-            <input
-              className="w-full h-10 focus:outline-none rounded-lg text-base border  p-3"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@email.com"
-            />
-            {emailErr && <p className="text-red-500 text-sm">*{emailErr}</p>}
-            <p className="text-sm text-yellow-600">
-              Share email to get summary in your inbox
+    const submitHandler = () => {
+      summarize({
+        text,
+        source: "text",
+      });
+    };
+
+    return (
+      <>
+        <div className="summarizer-text space-y-2 pr-3 min-h-[260px]  sm:!min-h-[220px]">
+          {errMsg && (
+            <p className="text-lg bg-red-200 text-red-600 p-3 rounded-lg font-normal">
+              {errMsg}
             </p>
+          )}
+          <div>
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder={placeholder}
+              className="w-full min-h-16 text-sm md:text-base focus:outline-none rounded-xl border-none bg-slate-100 p-3 no-scrollbar"
+            ></textarea>
+          </div>
+          <div className="flex flex-col gap-2 sm:!flex-row justify-between">
+            <div className="flex items-center justify-between gap-2 w-full">
+              <a
+                className="flex flex-row gap-1.5 bg-sky-200 p-2 rounded-lg text-sm"
+                href={`${webAppBaseUrl}/login`}
+              >
+                <span className="font-medium">Free</span>
+                <span className="font-semibold text-sky-600 uppercase">
+                  Trial
+                </span>
+              </a>
+              <button
+                onClick={submitHandler}
+                disabled={!isValidText}
+                className="w-full md:!w-auto px-3 md:!px-6 py-2 h-10 flex items-center justify-center gap-2 rounded-lg disabled:bg-[#BDBDBD] disabled:cursor-not-allowed disabled:text-white bg-[#2196F3] hover:bg-[#2196F3]/80 text-white transition-colors duration-200 text-sm font-medium whitespace-nowrap"
+              >
+                {loading ? (
+                  <>
+                    <VscLoading className="animate-spin" />
+                    <span className="ml-2">Processing</span>
+                  </>
+                ) : (
+                  <>
+                    <BsStars />
+                    {buttonName}
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-        <div className="w-full sm:!w-[140px]">
-          <button
-            onClick={submitHandler}
-            disabled={!text}
-            className="w-full px-4 py-2 h-10 flex items-center justify-center gap-2 rounded-xl disabled:cursor-not-allowed disabled:bg-slate-500 disabled:text-white bg-sky-600 hover:bg-sky-500 text-white transition-colors duration-200 text-sm font-medium"
-          >
-            {loading ? (
-              <>
-                <VscLoading className="animate-spin" />
-                <span className="ml-2">Processing</span>
-              </>
-            ) : (
-              "Generate"
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+      </>
+    );
+  }
+);

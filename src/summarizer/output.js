@@ -117,16 +117,30 @@ const Output = () => {
     });
   }, [completion]);
 
+
   const downloadHandler = useCallback(() => {
-    textToPdf(completion, (err) => {
-      if (err) {
-        console.log(err);
-        toast("Failed to export pdf!", {
-          position: "bottom-right",
-        });
-      }
-    });
+    // textToPdf(completion, (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //     toast("Failed to export pdf!", {
+    //       position: "bottom-right",
+    //     });
+    //   }
+    // });
+
+    const blob = new Blob([completion], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'summary.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }, [completion]);
+
+
+
 
   if (!summary) {
     return null;
@@ -135,7 +149,7 @@ const Output = () => {
   return (
     <div className="output space-y-3">
       {/* tabs */}
-      <div className="w-full max-w-full flex flex-row gap-2 overflow-x-auto no-scrollbar">
+      <div className="bg-white w-full max-w-full flex flex-row gap-2 overflow-x-auto no-scrollbar pr-3">
         {tabs.map((tab) => {
           return (
             <button
@@ -154,116 +168,118 @@ const Output = () => {
         })}
       </div>
 
-      {/* video info */}
-      {activeTab === "content" && (
-        <div className="py-8 flex gap-3 border-b border-gary-200 ">
-          {/* thumbnail */}
-          <div className="w-3/12">
-            {summary.thumbnail && (
-              <img
-                src={summary.thumbnail}
-                alt=""
-                className="w-full rounded-lg"
-              />
-            )}
-          </div>
-
-          {/* details info */}
-          <div className="space-y-2">
-            <h2 className="text-xl font-medium">{summary.title}</h2>
-
-            {/* description */}
-            <div className="flex flex-row gap-3 text-sm">
-              <div className="flex gap-1.5 flex-row items-center">
-                <GoClock className="text-lg" />
-                <span>{summary.formatted_duration}</span>
-              </div>
-              <div className="flex gap-1.5 flex-row items-center">
-                <CiCalendar className="text-lg" />
-                <time dateTime={summary.formatted_published_time}>
-                  {summary.formatted_published_time}
-                </time>
-              </div>
+      <div className="pr-2 md:max-h-[calc(100vh-13rem)] space-y-3 overflow-y-auto custom-scroll-bar relative pb-10">
+        {/* video info */}
+        {activeTab === "content" && (
+          <div className="py-8 flex gap-3 border-b border-gary-200 ">
+            {/* thumbnail */}
+            <div className="w-3/12">
+              {summary.thumbnail && (
+                <img
+                  src={summary.thumbnail}
+                  alt=""
+                  className="w-full rounded-lg"
+                />
+              )}
             </div>
 
-            {/* channel info */}
-            {summary.channel && summary.source === "Youtube" && (
-              <div>
-                <div className="w-full flex items-center gap-3">
-                  <ImageFallback
-                    src={summary.channel.thumbnail_url}
-                    alt=""
-                    className="w-7 h-7 rounded-full"
-                  >
-                    <div className="w-7 h-7 rounded-full bg-gray-200"></div>
-                  </ImageFallback>
-                  <div className="flex items-center gap-4">
-                    <h3 className="text-sm font-medium">
-                      {summary.channel.title}
-                    </h3>
-                    <div className="text-gray-500 text-xs font-semibold">
-                      {formatNumber(summary.channel.subscriber_count)}
+            {/* details info */}
+            <div className="space-y-2">
+              <h2 className="text-xl font-medium">{summary.title}</h2>
+
+              {/* description */}
+              <div className="flex flex-row gap-3 text-sm">
+                <div className="flex gap-1.5 flex-row items-center">
+                  <GoClock className="text-lg" />
+                  <span>{summary.formatted_duration}</span>
+                </div>
+                <div className="flex gap-1.5 flex-row items-center">
+                  <CiCalendar className="text-lg" />
+                  <time dateTime={summary.formatted_published_time}>
+                    {summary.formatted_published_time}
+                  </time>
+                </div>
+              </div>
+
+              {/* channel info */}
+              {summary.channel && summary.source === "Youtube" && (
+                <div>
+                  <div className="w-full flex items-center gap-3">
+                    <ImageFallback
+                      src={summary.channel.thumbnail_url}
+                      alt=""
+                      className="w-7 h-7 rounded-full"
+                    >
+                      <div className="w-7 h-7 rounded-full bg-gray-200"></div>
+                    </ImageFallback>
+                    <div className="flex items-center gap-4">
+                      <h3 className="text-sm font-medium">
+                        {summary.channel.title}
+                      </h3>
+                      <div className="text-gray-500 text-xs font-semibold">
+                        {formatNumber(summary.channel.subscriber_count)}
+                      </div>
                     </div>
                   </div>
                 </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* content tab */}
+        {activeTab === "content" && (
+          <div className="flex items-center gap-2 border-b border-gray-200 pb-4">
+            <button
+              onClick={copyHandler}
+              className="flex items-center gap-2 text-sm font-medium outline-none focus:outline-none border px-2 h-8 rounded hover:bg-gray-100 transitions-colors"
+            >
+              <MdOutlineContentCopy />
+              <span className="text-xs">Copy</span>
+            </button>
+            <Languages />
+            <button
+              onClick={downloadHandler}
+              className="ml-auto bg-black text-white flex items-center gap-2 text-sm font-medium border px-4 h-8 rounded hover:bg-black/80 transitions-colors"
+            >
+              <MdOutlineFileDownload />
+              <span>Export .txt file</span>
+            </button>
+          </div>
+        )}
+
+        {/* content loading */}
+        {!completion && !errMsg && (
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
+              <span>Generating...</span>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "content" && (
+          <>
+            {errMsg && <div className="text-red-500 text-lg py-4">{errMsg}</div>}
+
+            {completion && (
+              <div className={`md:pr-3 prose dark:prose-invert !text-lg pb-10`}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      parsedContent +
+                      `${isLoading ? `<span class="typewriter"></span>` : ""}`,
+                  }}
+                ></div>
               </div>
             )}
-          </div>
-        </div>
-      )}
+          </>
+        )}
 
-      {/* content tab */}
-      {activeTab === "content" && (
-        <div className="flex items-center gap-2 border-b border-gray-200 pb-4">
-          <button
-            onClick={copyHandler}
-            className="flex items-center gap-2 text-sm font-medium outline-none focus:outline-none border px-2 h-8 rounded hover:bg-gray-100 transitions-colors"
-          >
-            <MdOutlineContentCopy />
-            <span className="text-xs">Copy</span>
-          </button>
-          <Languages />
-          <button
-            onClick={downloadHandler}
-            className="ml-auto bg-black text-white flex items-center gap-2 text-sm font-medium border px-4 h-8 rounded hover:bg-black/80 transitions-colors"
-          >
-            <MdOutlineFileDownload />
-            <span>Export PDF</span>
-          </button>
-        </div>
-      )}
-
-      {/* content loading */}
-      {!completion && !errMsg && (
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
-            <span>Generating...</span>
-          </div>
-        </div>
-      )}
-
-      {activeTab === "content" && (
-        <>
-          {errMsg && <div className="text-red-500 text-lg py-4">{errMsg}</div>}
-
-          {completion && (
-            <div className={`md:pr-3 prose dark:prose-invert !text-lg pb-10`}>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    parsedContent +
-                    `${isLoading ? `<span class="typewriter"></span>` : ""}`,
-                }}
-              ></div>
-            </div>
-          )}
-        </>
-      )}
-
-      <CustomPrompts show={activeTab === "repurpose"} />
-      <Chat show={activeTab === "chat"} />
-      {activeTab === "transcript" && <Transcript />}
+        <CustomPrompts show={activeTab === "repurpose"} />
+        <Chat show={activeTab === "chat"} />
+        {activeTab === "transcript" && <Transcript />}
+      </div>
     </div>
   );
 };

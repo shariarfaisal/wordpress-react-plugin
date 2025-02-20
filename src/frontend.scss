@@ -46,3 +46,77 @@
     border-color: orange;
   }
 }
+
+.suggested-videos {
+  margin-top: 30px;
+
+  .suggested-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .relative {
+    padding: 0 1px;
+  }
+
+  .bg-gradient-to-r,
+  .bg-gradient-to-l {
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  button {
+    opacity: 0.9;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+
+.custom-scroll-bar {
+  scrollbar-width: thin;
+  scrollbar-color: #333 #f1f1f1;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-thumb {
+  background-color: #333;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.custom-scroll-bar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-thumb {
+  background-color: #333;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.export-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover {
+    background-color: #45a049;
+  }
+
+  i {
+    font-size: 16px;
+  }
+}
