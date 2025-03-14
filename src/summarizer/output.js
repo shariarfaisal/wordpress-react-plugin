@@ -139,9 +139,6 @@ const Output = () => {
     window.URL.revokeObjectURL(url);
   }, [completion]);
 
-
-
-
   if (!summary) {
     return null;
   }
@@ -168,7 +165,7 @@ const Output = () => {
         })}
       </div>
 
-      <div className="pr-2 md:max-h-[calc(100vh-13rem)] space-y-3 overflow-y-auto custom-scroll-bar relative pb-10">
+      <div className="pr-2 md:max-h-[calc(100vh-13rem)] space-y-3 overflow-y-auto custom-scroll-bar relative">
         {/* video info */}
         {activeTab === "content" && (
           <div className="py-8 flex gap-3 border-b border-gary-200 ">

@@ -52,52 +52,53 @@ function OurComponent({
   return (
     <div className="summarizer">
       <ToastContainer />
-      <div className="!border relative rounded-lg p-4 pr-1  space-y-3 bg-white">
-        {!summary && (
-          <>
-            <p className="text-lg font-medium text-gray-800 mb-3">
-              {toolTitle}
-            </p>
-            <Summarizer
-              type={summarizerType}
-              ref={urlSummarizerRef}
-              buttonName={buttonName}
-              placeholder={placeholder}
-            />
-          </>
-        )}
-        {summary && summary.captions && <Output />}
-        <LimitModal />
-        <div className="absolute bottom-0 left-0 rounded-t-none rounded-b-lg w-full flex flex-col sm:!flex-row sm:items-center sm:justify-between gap-4 bg-[#222222] text-white p-4">
-        <div className="space-y-2 sm:max-w-[calc(100%-200px)]">
-          <p className="text-base font-medium">Generate Unlimited Summaries & Content For Free</p>
-          <div className="flex items-center flex-row overflow-scroll no-scrollbar gap-3 text-xs md:!text-sm">
-            <div className="flex items-center gap-2">
-              <GoCheckCircleFill className="text-green-500" />
-              <p className="whitespace-nowrap">Summarize Anything</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <GoCheckCircleFill className="text-green-500" />
-              <p className="whitespace-nowrap">Unlimited Transcription</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <GoCheckCircleFill className="text-green-500" />
-              <p className="whitespace-nowrap">Unlimited Content Generation</p>
-            </div>
-          </div>  
+      <div>
+        <div className="!border rounded-t-lg p-4 pr-1  space-y-3 bg-white">
+          {!summary && (
+            <>
+              <p className="text-lg font-medium text-gray-800 mb-3">
+                {toolTitle}
+              </p>
+              <Summarizer
+                type={summarizerType}
+                ref={urlSummarizerRef}
+                buttonName={buttonName}
+                placeholder={placeholder}
+              />
+            </>
+          )}
+          {summary && summary.captions && <Output />}
+          <LimitModal />
         </div>
-        <a className="mx-auto sm:!mx-0 sm:!ml-auto" href="https://web.tubeonai.com/login">
-          <button className="bg-white text-black hover:bg-gray-200 transition-all duration-300 px-4 py-2 rounded-md whitespace-nowrap text-sm">
-            Get 300 credits for free
-          </button>
-        </a>
+        <div className="rounded-t-none rounded-b-lg w-full flex flex-col sm:!flex-row sm:items-center sm:justify-between gap-4 bg-[#222222] text-white p-4">
+          <div className="space-y-2 sm:max-w-[calc(100%-200px)]">
+            <p className="text-base font-medium">Generate Unlimited Summaries & Content For Free</p>
+            <div className="flex items-center flex-row overflow-scroll no-scrollbar gap-3 text-xs md:!text-sm">
+              <div className="flex items-center gap-2">
+                <GoCheckCircleFill className="text-green-500" />
+                <p className="whitespace-nowrap">Summarize Anything</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <GoCheckCircleFill className="text-green-500" />
+                <p className="whitespace-nowrap">Unlimited Transcription</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <GoCheckCircleFill className="text-green-500" />
+                <p className="whitespace-nowrap">Unlimited Content Generation</p>
+              </div>
+            </div>  
+          </div>
+          <a className="mx-auto sm:!mx-0 sm:!ml-auto" href="https://web.tubeonai.com/login">
+            <button className="bg-white text-black hover:bg-gray-200 transition-all duration-300 px-4 py-2 rounded-md whitespace-nowrap text-sm">
+              Get 300 credits for free
+            </button>
+          </a>
+        </div>
       </div>
-      </div>
+
       {youtubeUrls && youtubeUrls.length > 0 && summarizerType === "url" && (
         <SuggestedVideos videos={youtubeUrls} onVideoClick={handleVideoClick} />
       )}
-
-      
     </div>
   );
 }

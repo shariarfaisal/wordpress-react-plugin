@@ -175,6 +175,7 @@ export const FileSummarizer = forwardRef(
     const summarize = useCallback(
       async ({ prompt_type, title }) => {
         try {
+          console.log(uploadedUrl, file);
           if (!uploadedUrl || !file) {
             return;
           }
@@ -228,7 +229,7 @@ export const FileSummarizer = forwardRef(
         prompt_type,
         title,
       });
-    }, [prompt_type, title]);
+    }, [prompt_type, title, summarize]);
 
     const closeFile = () => {
       setFile(null);
@@ -238,7 +239,7 @@ export const FileSummarizer = forwardRef(
     };
 
     return (
-      <div className="summarizer-text space-y-3 pr-3 min-h-[380px] sm:!min-h-[330px]">
+      <div className="summarizer-text space-y-3 pr-3">
         {errMsg && (
           <p className="text-lg bg-red-200 text-red-600 p-3 rounded-lg font-normal">
             {errMsg}
@@ -297,7 +298,7 @@ export const FileSummarizer = forwardRef(
               </div>
               <button
                 onClick={closeFile}
-                className="flex-center absolute top-0 right-0 mt-[-8px] mr-[-8px] w-5 h-5 rounded-full  bg-slate-100 hover:bg-slate-200 transition-all duration-200 border border-slate-300"
+                className="flex items-center justify-center absolute top-0 right-0 mt-[-8px] mr-[-8px] w-7 h-7 rounded-full  bg-slate-100 hover:bg-slate-200 transition-all duration-200 border border-slate-300"
               >
                 <IoMdClose />
               </button>
@@ -323,23 +324,25 @@ export const FileSummarizer = forwardRef(
                 Trial
               </span>
             </a>
-            <button
-              onClick={submitHandler}
-              disabled={!uploadedUrl}
-              className="w-full md:!w-auto px-3 md:!px-6 py-2 h-10 flex items-center justify-center gap-2 rounded-lg disabled:bg-[#BDBDBD] disabled:cursor-not-allowed disabled:text-white bg-[#2196F3] hover:bg-[#2196F3]/80 text-white transition-colors duration-200 text-sm font-medium whitespace-nowrap"
-            >
-              {loading ? (
-                <>
-                  <VscLoading className="animate-spin" />
-                  <span className="ml-2">Processing</span>
-                </>
-              ) : (
-                <>
-                  <BsStars />
-                  {buttonName}
-                </>
-              )}
-            </button>
+            <div className="flex-1">
+              <button
+                onClick={submitHandler}
+                disabled={!uploadedUrl}
+                className="w-full ml-auto md:!w-auto px-3 md:!px-6 py-2 h-10 flex items-center justify-center gap-2 rounded-lg disabled:bg-[#BDBDBD] disabled:cursor-not-allowed disabled:text-white bg-[#2196F3] hover:bg-[#2196F3]/80 text-white transition-colors duration-200 text-sm font-medium whitespace-nowrap"
+              >
+                {loading ? (
+                  <>
+                    <VscLoading className="animate-spin" />
+                    <span className="ml-2">Processing</span>
+                  </>
+                ) : (
+                  <>
+                    <BsStars />
+                    {buttonName}
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

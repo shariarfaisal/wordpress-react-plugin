@@ -74,7 +74,7 @@ export const TextSummarizer = forwardRef(
 
     return (
       <>
-        <div className="summarizer-text space-y-2 pr-3 min-h-[260px]  sm:!min-h-[220px]">
+        <div className="summarizer-text space-y-2 pr-3">
           {errMsg && (
             <p className="text-lg bg-red-200 text-red-600 p-3 rounded-lg font-normal">
               {errMsg}

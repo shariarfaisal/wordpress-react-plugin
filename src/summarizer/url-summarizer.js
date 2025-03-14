@@ -83,13 +83,13 @@ export const UrlSummarizer = forwardRef(
 
     return (
       <>
-        <div className="summarizer-url space-y-3 pr-3 min-h-[200px] sm:!min-h-[130px]">
+        <div className="summarizer-url space-y-3 pr-3">
           {errMsg && (
             <p className="text-lg bg-red-200 text-red-600 p-3 rounded-lg font-normal">
               {errMsg}
             </p>
           )}
-          <div className="relative min-h-[175px] sm:!min-h-[130px]">
+          <div className="relative">
             <input
               value={url}
               onChange={(e) => setUrl(e.target.value)}
