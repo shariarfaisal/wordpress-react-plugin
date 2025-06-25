@@ -175,7 +175,6 @@ export const FileSummarizer = forwardRef(
     const summarize = useCallback(
       async ({ prompt_type, title }) => {
         try {
-          console.log(uploadedUrl, file);
           if (!uploadedUrl || !file) {
             return;
           }
@@ -195,7 +194,7 @@ export const FileSummarizer = forwardRef(
           }
 
           setLoading(true);
-          const { data } = await axios.post(`${webAppBaseUrl}/api/summarize`, {
+          const { data } = await axios.post(`${backendBaseUrl}/api/summarize`, {
             link_or_id: uploadedUrl,
             title,
             prompt_type,

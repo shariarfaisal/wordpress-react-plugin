@@ -15,6 +15,34 @@ function EditComponent(props) {
   const [toolTitle, setToolTitle] = useState("YouTube Video Summarizer");
   const [placeholder, setPlaceholder] = useState("Paste YouTube URL here");
 
+  // Helper function to get localStorage key based on current pathname
+  const getLocalStorageKey = () => {
+    const pathname = window.location.pathname;
+    return `tubeonai_youtube_urls_${pathname.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  };
+
+  // Helper function to save URLs to localStorage
+  const saveUrlsToLocalStorage = (urls) => {
+    try {
+      const key = getLocalStorageKey();
+      localStorage.setItem(key, JSON.stringify(urls));
+    } catch (error) {
+      console.warn('Failed to save URLs to localStorage:', error);
+    }
+  };
+
+  // Helper function to load URLs from localStorage
+  const loadUrlsFromLocalStorage = () => {
+    try {
+      const key = getLocalStorageKey();
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      console.warn('Failed to load URLs from localStorage:', error);
+      return [];
+    }
+  };
+
   function updateType(e) {
     setSummarizerType(e.target.value);
     props.setAttributes({ summarizerType: e.target.value });
@@ -41,6 +69,8 @@ function EditComponent(props) {
       const updatedUrls = [...youtubeUrls, newUrl.trim()];
       setYoutubeUrls(updatedUrls);
       props.setAttributes({ youtubeUrls: updatedUrls });
+      // Save to localStorage as well
+      saveUrlsToLocalStorage(updatedUrls);
       setNewUrl(""); // Clear input after adding
     }
   }
@@ -51,14 +81,33 @@ function EditComponent(props) {
     );
     setYoutubeUrls(updatedUrls);
     props.setAttributes({ youtubeUrls: updatedUrls });
+    // Remove from localStorage as well
+    saveUrlsToLocalStorage(updatedUrls);
   }
 
   useEffect(() => {
     setSummarizerType(props.attributes.summarizerType || "url");
-    setYoutubeUrls(props.attributes.youtubeUrls || []);
     setButtonName(props.attributes.buttonName || "Summarize");
     setToolTitle(props.attributes.toolTitle || "YouTube Video Summarizer");
     setPlaceholder(props.attributes.placeholder || "Paste YouTube URL here");
+    
+    // Handle YouTube URLs with localStorage recovery
+    let urlsToUse = [];
+    
+    if (props.attributes.youtubeUrls && props.attributes.youtubeUrls.length > 0) {
+      // If attributes exist, use them
+      urlsToUse = props.attributes.youtubeUrls;
+    } else {
+      // If attributes don't exist, try to recover from localStorage
+      const storedUrls = loadUrlsFromLocalStorage();
+      if (storedUrls.length > 0) {
+        urlsToUse = storedUrls;
+        // Also update the attributes with recovered data
+        props.setAttributes({ youtubeUrls: storedUrls });
+      }
+    }
+    
+    setYoutubeUrls(urlsToUse);
   }, []);
 
   return (

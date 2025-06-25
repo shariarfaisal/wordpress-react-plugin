@@ -26,7 +26,7 @@ function OurComponent({
   toolTitle,
   placeholder,
 }) {
-  const { summary, setType, setPromptType } = useSummarizer();
+  const { summary, setSummary, setType, setPromptType } = useSummarizer();
   const urlSummarizerRef = React.useRef();
   const url = new URL(window.location.href);
 
@@ -68,6 +68,17 @@ function OurComponent({
             </>
           )}
           {summary && summary.captions && <Output />}
+          {summary && !summary.captions && summary.error_text && (
+            <div className="flex justify-between items-center gap-4 pr-3">
+              <div className="text-red-500">{summary.error_text}</div>
+              <button 
+              onClick={() => {
+                setSummary(null);
+              }} className="bg-sky-500 text-white hover:bg-sky-600 transition-all duration-300 px-4 py-2 rounded-md whitespace-nowrap text-sm">
+                Try Another
+              </button>
+            </div>
+          )}
           <LimitModal />
         </div>
         <div className="rounded-t-none rounded-b-lg w-full flex flex-col sm:!flex-row sm:items-center sm:justify-between gap-4 bg-[#222222] text-white p-4">
@@ -88,9 +99,9 @@ function OurComponent({
               </div>
             </div>  
           </div>
-          <a className="mx-auto sm:!mx-0 sm:!ml-auto" href="https://web.tubeonai.com/login">
+          <a className="mx-auto sm:!mx-0 sm:!ml-auto" href="https://web.tubeonai.com/summary?buy_now_package=48">
             <button className="bg-white text-black hover:bg-gray-200 transition-all duration-300 px-4 py-2 rounded-md whitespace-nowrap text-sm">
-              Get 300 credits for free
+            Start Free Trial
             </button>
           </a>
         </div>
