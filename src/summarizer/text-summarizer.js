@@ -26,7 +26,7 @@ export const TextSummarizer = forwardRef(
       async ({ text, prompt_type, source }) => {
         try {
           setLoading(true);
-          const { data } = await axios.post(`${backendBaseUrl}/api/summarize`, {
+          const { data } = await axios.post(`${backendBaseUrl}/api/v2/public/summarize`, {
             text,
             prompt_type,
             source,

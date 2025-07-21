@@ -194,7 +194,7 @@ export const FileSummarizer = forwardRef(
           }
 
           setLoading(true);
-          const { data } = await axios.post(`${backendBaseUrl}/api/summarize`, {
+          const { data } = await axios.post(`${backendBaseUrl}/api/v2/public/summarize`, {
             link_or_id: uploadedUrl,
             title,
             prompt_type,

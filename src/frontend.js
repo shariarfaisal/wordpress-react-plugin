@@ -53,7 +53,7 @@ function OurComponent({
     <div className="summarizer">
       <ToastContainer />
       <div>
-        <div className="!border rounded-t-lg p-4 pr-1  space-y-3 bg-white">
+        <div className="!border rounded-lg p-4 pr-1  space-y-3 bg-white">
           {!summary && (
             <>
               <p className="text-lg font-medium text-gray-800 mb-3">
@@ -81,7 +81,7 @@ function OurComponent({
           )}
           <LimitModal />
         </div>
-        <div className="rounded-t-none rounded-b-lg w-full flex flex-col sm:!flex-row sm:items-center sm:justify-between gap-4 bg-[#222222] text-white p-4">
+        {/* <div className="rounded-t-none rounded-b-lg w-full flex flex-col sm:!flex-row sm:items-center sm:justify-between gap-4 bg-[#222222] text-white p-4">
           <div className="space-y-2 sm:max-w-[calc(100%-200px)]">
             <p className="text-base font-medium">Generate Unlimited Summaries & Content For Free</p>
             <div className="flex items-center flex-row overflow-scroll no-scrollbar gap-3 text-xs md:!text-sm">
@@ -104,7 +104,7 @@ function OurComponent({
             Start Free Trial
             </button>
           </a>
-        </div>
+        </div> */}
       </div>
 
       {youtubeUrls && youtubeUrls.length > 0 && summarizerType === "url" && (
